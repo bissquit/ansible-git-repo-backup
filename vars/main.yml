@@ -1,0 +1,52 @@
+---
+# all options description you may find at official git-sync repo
+# read more at https://github.com/kubernetes/git-sync
+#
+#git_repo_backup_configuration:
+#  - uniq_name:
+#    # Primary flags
+#    repo: (required)
+#    branch: "master"
+#    rev: "HEAD"
+#    root: "{{ git_repo_backup_container_dir }}"
+#    dest: ""
+#    wait: 1
+#    one_time: false
+#    max_sync_failures: 0
+#    # Flags which control how git runs
+#    depth: 0
+#    submodules: recursive
+#    timeout: 120
+#    sparse_checkout_file: ""
+#    git_config: ""
+#    git_gc: "auto"
+#    git: "git"
+#    # Flags which configure authentication
+#    username: ""
+#    password: ""
+#    password_file: ""
+#    ssh: false
+#    ssh_key_file: "/etc/git_secret/ssh"
+#    ssh_known_hosts: true
+#    ssh_known_hosts_file: "/etc/git_secret/known_hosts"
+#    add_user: false
+#    cookie_file: false
+#    askpass_url: ""
+#    # Flags which configure hooks
+#    exechook_command: ""
+#    exechook_timeout: 30
+#    exechook_backoff: 3
+#    webhook_url: ""
+#    webhook_method: "POST"
+#    webhook_success_status: 200
+#    webhook_timeout: 1
+#    webhook_backoff: 3
+#    # Flags which configure observability
+#    http_bind: ""
+#    http_metrics: true
+#    http_pprof: false
+#    # Other flags
+#    change_permissions: 0
+#    error_file: ""
+
+git_repo_backup_git_sync_tag: v3.5.0
