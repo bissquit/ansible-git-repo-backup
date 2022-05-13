@@ -1,0 +1,58 @@
+# {{ ansible_managed }}
+
+version: '2'
+
+{% for item in git_repo_backup_configuration %}
+services:
+  git-sync-{{ item.uniq_name }}:
+    image: k8s.gcr.io/git-sync/git-sync:{{ git_repo_backup_git_sync_tag }}@{{ git_repo_backup_git_sync_versions[git_repo_backup_git_sync_tag].hash }}
+    user: "{{ git_repo_backup_user }}:{{ git_repo_backup_group }}"
+    environment:
+      GIT_SYNC_REPO: "{{ item.repo }}"
+      GIT_SYNC_BRANCH: "{{ item.branch | default("master") }}"
+      GIT_SYNC_REV: "{{ item.rev | default("HEAD") }}"
+      GIT_SYNC_ROOT: "{{ item.root | default(git_repo_backup_container_dir) }}"
+      GIT_SYNC_DEST: "{{ item.dest | default("") }}"
+      GIT_SYNC_WAIT: "{{ item.wait | default(1) }}"
+      GIT_SYNC_ONE_TIME: "{{ item.one_time | default("false") }}"
+      GIT_SYNC_MAX_SYNC_FAILURES: {{ item.max_sync_failures | default(0) }}
+      
+      GIT_SYNC_DEPTH: {{ item.depth | default(0) }}
+      GIT_SYNC_SUBMODULES: {{ item.submodules | default("recursive") }}
+      GIT_SYNC_TIMEOUT: {{ item.timeout | default(120) }}
+      GIT_SYNC_SPARSE_CHECKOUT_FILE: "{{ item.sparse_checkout_file | default("") }}"
+      GIT_SYNC_GIT_CONFIG: "{{ item.git_config | default("") }}"
+      GIT_SYNC_GIT_GC: "{{ item.git_gc | default("auto") }}"
+      GIT_SYNC_GIT: "{{ item.git | default("git") }}"
+      
+      GIT_SYNC_USERNAME: "{{ item.username | default("") }}"
+      GIT_SYNC_PASSWORD: "{{ item.password | default("") }}"
+      GIT_SYNC_PASSWORD_FILE: "{{ item.password_file | default("") }}"
+      GIT_SYNC_SSH: "{{ item.ssh | default("false") }}"
+      GIT_SSH_KEY_FILE: "{{ item.ssh_key_file | default("/etc/git-secret/ssh") }}"
+      GIT_KNOWN_HOSTS: "{{ item.ssh_known_hosts | default(true) }}"
+      GIT_SSH_KNOWN_HOSTS_FILE: "{{ item.ssh_known_hosts_file | default("/etc/git-secret/known_hosts") }}"
+      GIT_SYNC_ADD_USER: "{{ item.add_user | default("false") }}"
+      GIT_COOKIE_FILE: "{{ item.cookie_file | default("false") }}"
+      GIT_ASKPASS_URL: "{{ item.askpass_url | default("") }}"
+      
+      GIT_SYNC_EXECHOOK_COMMAND: "{{ item.exechook_command | default("") }}"
+      GIT_SYNC_EXECHOOK_TIMEOUT: {{ item.exechook_timeout | default(30) }}
+      GIT_SYNC_EXECHOOK_BACKOFF: {{ item.exechook_backoff | default(3) }}
+      GIT_SYNC_WEBHOOK_URL: "{{ item.webhook_url | default("") }}"
+      GIT_SYNC_WEBHOOK_METHOD: "{{ item.webhook_method | default("POST") }}"
+      GIT_SYNC_WEBHOOK_SUCCESS_STATUS: {{ item.webhook_success_status | default(200) }}
+      GIT_SYNC_WEBHOOK_TIMEOUT: {{ item.webhook_timeout | default(1) }}
+      GIT_SYNC_WEBHOOK_BACKOFF: {{ item.webhook_backoff | default(3) }}
+      
+      GIT_SYNC_HTTP_BIND: "{{ item.http_bind | default("") }}"
+      GIT_SYNC_HTTP_METRICS: "{{ item.http_metrics | default("true") }}"
+      GIT_SYNC_HTTP_PPROF: "{{ item.http_pprof | default("false") }}"
+      
+      GIT_SYNC_PERMISSIONS: {{ item.change_permissions | default(0) }}
+      GIT_SYNC_ERROR_FILE: "{{ item.error_file | default("") }}"
+    volumes:
+      - {{ git_repo_backup_dir }}/{{ item.uniq_name }}:{{ git_repo_backup_container_dir }}
+    restart: always
+
+{% endfor %}

@@ -1,0 +1,38 @@
+---
+- name: Create group
+  group:
+    name: "{{ git_repo_backup_group }}"
+    state: present
+
+- name: Create user
+  user:
+    name: "{{ git_repo_backup_user }}"
+    group: "{{ git_repo_backup_group }}"
+    home: "{{ git_repo_backup_dir }}"
+    state: present
+
+- name: Create directory for synced repositories
+  file:
+    path: "{{ git_repo_backup_dir }}"
+    state: directory
+    owner: "{{ git_repo_backup_user }}"
+    group: "{{ git_repo_backup_group }}"
+    mode: 0770
+  loop:
+  - "{{ git_repo_backup_dir }}"
+  
+- name: Create uniq subdirectories for each repository
+  file:
+    path: "{{ git_repo_backup_dir }}/{{ item.uniq_name }}"
+    state: directory
+    owner: "{{ git_repo_backup_user }}"
+    group: "{{ git_repo_backup_group }}"
+    mode: 0770
+  loop: "{{ git_repo_backup_configuration }}"
+
+- name: Copy docker-compose template to {{ git_repo_backup_dir }}
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ git_repo_backup_dir }}/{{ item }}"
+  loop:
+  - "docker-compose.yml"

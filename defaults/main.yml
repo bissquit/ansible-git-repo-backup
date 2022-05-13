@@ -1,0 +1,9 @@
+---
+git_repo_backup_user: backup
+git_repo_backup_group: backup
+git_repo_backup_dir: /var/lib/git_repo_backup
+git_repo_backup_container_dir: /tmp/git
+
+git_repo_backup_git_sync_versions:
+  v3.5.0:
+    hash: "sha256:d16f5b2bca94cdbb4e40b256bfe639450a6f0577dbd8b3fcaf126a2261822fcd"
